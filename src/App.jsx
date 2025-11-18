@@ -35,7 +35,7 @@ function App() {
     name: "Rome",
     description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolore, quisquam tempora aut praesentium nihil facilis iste architecto voluptates culpa sapiente necessitatibus",
     imgURL: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1996",
-    isVisited:true,
+    isVisited:false,
 
   },
   {
@@ -76,7 +76,22 @@ function App() {
         //imgURL="https://plus.unsplash.com/premium_photo-1718035557075-5111d9d906d2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGFyaXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=900">
           //Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolore, quisquam tempora aut praesentium nihil facilis iste architecto voluptates culpa sapiente necessitatibus
       //</Card> */}
-      {cities.map((city)=>(
+
+
+      {/*{cities.map((city)=>(
+        <Card
+          key={city.id}
+          title={city.name}
+          isVisited={city.isVisited}
+          imgURL={city.imgURL}>
+          {city.description}
+          </Card>
+      ))}
+      */}
+
+
+      
+      {cities.filter((city) => !city.isVisited).map((city) => (
         <Card
           key={city.id}
           title={city.name}
