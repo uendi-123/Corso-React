@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useEffect, useReducer } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -14,12 +14,46 @@ function handleChange(){
   console.log("Ciao");
 }
 
+function formReducer(state,action){
+  switch(action.type){
+    case "CHANGE_FIELD":
+      return {...state,[action.field]:action.value}
+      case "RESET_FORM":
+        return {name: '',email: ''};
+        default:
+          return state;
+  }
+
+}
+
 function App() {
   const [count, setCount] = useState(0)
+  const [formState,dispatchFormState]=useReducer(formReducer,{name: '',email: ''})
   
   const addCity=(city) =>{
     setCities(prev=>[...prev,city]);
   }
+  
+  const[data,setData]=useState([]);
+
+  useEffect(()=>{
+    fetch("https://jsonplaceholder.typicode.com/posts").then((response)=>response.json()).then((data)=>{
+      setData(data);
+      console.log(data)});
+    },[]);
+
+
+  //GESTIONE DELLA MODIFICA DEL CAMPO
+  const handleFieldChange=(field,value)=>{
+    dispatchFormState({type: "CHANGE_FIELD",field,value})
+  };
+
+  //GESTIONE DEL RESET DEL FORM
+  const resetForm=()=>{
+    dispatchFormState({type:"RESET_FORM"})
+  };
+
+
 
   const [cities,setCities]=useState([
     {
@@ -70,19 +104,20 @@ function App() {
           </Card>
       ))}
 
+      </div>
+      <div className='grid grid-cols-4 gap-5'>
+        {data.map((item)=>(
+          <div key={item.id} className='bg-slate-400 rounded-lg p-3'>
+            <p className='text-red-500 mb-1'>userId: {item.userId}</p>
+            <h2 className='text-xl mb-3'> {item.title}</h2>
+            <p className='text-grey-900'>{item.body}</p>
+        </div>
 
-      {/*{cities.filter((city) => !city.isVisited).map((city) => (
-        <Card
-          key={city.id}
-          title={city.name}
-          isVisited={city.isVisited}
-          imgURL={city.imgURL}>
-          {city.description}
-          </Card>
       ))}
-      */}
+      </div>
 
-    </div>
+
+
    {/* <div className="card">
       <button onClick={() => setCount((count) => count + 1)}>
         count is {count}
@@ -94,9 +129,33 @@ function App() {
 
     </div>
     */}
+    <form>
+      <div>
+        <label htmlFor='name'>Nome: </label>
+        <input 
+          type="text"
+          id="name"
+          name="name"
+          value={formState.name}
+          onChange={(e)=>handleFieldChange("name",e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor='email'>Email:</label>
+        <input 
+          type="email"
+          id="email"
+          name="email"
+          value={formState.email}
+          onChange={(e)=>handleFieldChange("email",e.target.value)}
+        />
+      </div>
+      <button onClick={resetForm}>Reset</button>
+      <button>Invia</button>
+    </form>
       
     </>
-  )
+  );
 }
 
-export default App
+export default App;
