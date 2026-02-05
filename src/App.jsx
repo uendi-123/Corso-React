@@ -1,10 +1,11 @@
-import { useState,useEffect, useReducer } from 'react'
+import { useState,useEffect, useReducer,useContext } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Card from "./components/Card.jsx"
 import CardForm from "./components/CardForm"
 import Example from "./components/Example"
+import { ProvaContext } from './components/stores/ProvaContext'
 
 function handleClick(){
   alert ("Ciao");
@@ -14,6 +15,7 @@ function handleChange(){
   console.log("Ciao");
 }
 
+//LOGICA DELLA GESTIONE DELLO STATO
 function formReducer(state,action){
   switch(action.type){
     case "CHANGE_FIELD":
@@ -49,8 +51,15 @@ function App() {
   };
 
   //GESTIONE DEL RESET DEL FORM
-  const resetForm=()=>{
+  const resetForm=(e)=>{
+    e.preventDefault();
     dispatchFormState({type:"RESET_FORM"})
+  };
+
+  //GESTIONE DEL SEND
+  const sendForm=(e)=>{
+    e.preventDefault();
+    console.log(formState)
   };
 
 
@@ -90,7 +99,7 @@ function App() {
 
 
   return (
-    <>
+    <ProvaContext.Provider value={{count,setCount}}>
     <Example></Example>
     <CardForm addCity={addCity}></CardForm>
     <div className='grid grid-cols-4 gap-5'>
@@ -105,7 +114,7 @@ function App() {
       ))}
 
       </div>
-      <div className='grid grid-cols-4 gap-5'>
+      {/* <div className='grid grid-cols-4 gap-5'>
         {data.map((item)=>(
           <div key={item.id} className='bg-slate-400 rounded-lg p-3'>
             <p className='text-red-500 mb-1'>userId: {item.userId}</p>
@@ -115,6 +124,7 @@ function App() {
 
       ))}
       </div>
+      */}
 
 
 
@@ -151,7 +161,7 @@ function App() {
         />
       </div>
       <button onClick={resetForm}>Reset</button>
-      <button>Invia</button>
+      <button onClick={sendForm}>Invia</button>
     </form>
       
     </>
